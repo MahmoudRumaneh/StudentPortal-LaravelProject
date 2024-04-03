@@ -8,66 +8,6 @@
     <link href="https://fonts.bunny.net/css?family=figtree:400,500&display=swap" rel="stylesheet" />
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
-    <style>
-        /* .popup-container {
-    z-index: 50;
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100vh;
-    width: 100vw;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.popup-content {
-    width: 32rem;
-    background-color: #fff;
-    padding: 2rem;
-    border-radius: 0.75rem;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
-}
-
-.form-label {
-    display: block;
-    margin-bottom: 0.5rem;
-    color: #4a5568;
-    font-size: 0.875rem;
-    font-weight: 600;
-}
-
-.form-input {
-    width: 100%;
-    padding: 0.5rem 0.75rem;
-    font-size: 1rem;
-    border-radius: 2rem;
-    border: 1px solid #e2e8f0;
-    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-}
-
-.form-input:focus {
-    outline: none;
-    border-color: #FFC254;
-    box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.5);
-}
-
-.form-button {
-    width: 110px;
-    padding: 0.5rem 0.75rem;
-    font-size: 1rem;
-    font-weight: 600;
-    color: #fff;
-    background-color: #4299e1;
-    border: 1px solid transparent;
-    border-radius: 0.25rem;
-    transition: background-color 0.15s ease-in-out;
-}
-
-.form-button:hover {
-    background-color: #3182ce;
-} */
-    </style>
 </head>
 
 <body>

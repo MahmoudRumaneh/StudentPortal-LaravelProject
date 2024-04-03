@@ -13,13 +13,13 @@
 
 <body>
 @include('components.navbar')
-@if (auth()->user()->active == 1)
+@if (auth()->user()->active == 0)
     <div style="margin-top: 4rem" class="bg-red-400 pb-3 pt-10">
         <p class="px-4">This account is inactive. Please wait for the administrator to activate your account.</p>
     </div>
     <div class="flex">
         <div class="flex justify-center items-center h-screen" id="lottie-container"
-             style="position: absolute; top: 0; bottom: 0; left: 0; right: 0; margin: auto; width: 200px; height: 200px;">
+            style="position: absolute; top: 0; bottom: 0; left: 0; right: 0; margin: auto; width: 200px; height: 200px;">
             <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.7.10/lottie.min.js"></script>
             <script>
                 document.addEventListener('DOMContentLoaded', function () {
@@ -40,7 +40,7 @@
             <div class="flex items-center flex-row rounded-t-lg h-50">
                 <div class="flex relative border-4 ml-5 border-white rounded-full overflow-hidden">
                     <img src="{{ auth()->user()->image }}" alt="profile picture"
-                         class="object-cover object-center rounded-full" style="width: 220px; height:250px"/>
+                        class="object-cover object-center rounded-full" style="width: 220px; height:250px"/>
                 </div>
                 <div class="ml-10">
                     <div class="flex items-center space-x-2 py-2 w-full">
@@ -122,6 +122,7 @@
                     </div>
                 </div>
                 @foreach ($courses as $course)
+                
                     @if (in_array($course->id, $addedCourseIds))
                         @php
                             $formattedDays = str_replace(',', ',<br>', $course->days);
@@ -179,39 +180,12 @@
         
 
         <script>
+
             function openModal() {
                 var modal = document.getElementById("myModal");
                 modal.classList.remove("hidden");
             }
         
-            function handleClose() {
-                var modal = document.getElementById("myModal");
-                modal.classList.add("hidden");
-                // window.location.href = "{{ route('studentHomePage') }}";
-            }
-        
-            function showEditTable(userId) {
-                var editTableContainer = document.getElementById("editTableContainer_" + userId);
-                editTableContainer.innerHTML = `<div id="editTable_${userId}"></div>`;
-                var url = "{{ route('editTable', ':userId') }}".replace(':userId', userId);
-                fetch(url)
-                    .then(response => response.text())
-                    .then(html => {
-                        document.getElementById(`editTable_${userId}`).innerHTML = html;
-                        var modal = document.getElementById("myModal");
-                        modal.classList.remove("hidden");
-                        var span = document.getElementsByClassName("close")[0];
-                        span.onclick = function () {
-                            modal.classList.add("hidden");
-                        };
-                        window.onclick = function (event) {
-                            if (event.target == modal) {
-                                modal.classList.add("hidden");
-                            }
-                        };
-                    })
-                    .catch(error => console.error('Error fetching edit table:', error));
-            }
         
             function addCourse(courseId) {
                 var userId = "{{ auth()->user()->id }}";
@@ -226,12 +200,8 @@
                     .then(response => response.json())
                     .then(data => {
                         if (data.success) {
-                            // Course added successfully, you can perform additional actions here
                             console.log('Course added successfully');
-                            // Reload the edit table
-                            showEditTable(userId);
                         } else {
-                            // Failed to add course, display error message
                             console.error('Failed to add course:', data.error);
                         }
                     })

@@ -18,12 +18,7 @@
     </style>
 </head>
 <body class="font-sans antialiased dark:bg-black dark:text-white/50">
-{{-- <nav>
-    <ul>
-        <li><a href="{{ route('register') }}">Register</a></li>
-        <li><a href="{{ route('login') }}">Login</a></li>
-    </ul>
-</nav> --}}
+
     <div class="flex flex-col justify-center items-center h-screen">
         <div class="flex flex-col bg-white shadow-md rounded-3xl px-8 pt-6 pb-8 mb-4" style="width: 30rem;"> 
             <div class="flex justify-center">

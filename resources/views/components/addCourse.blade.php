@@ -36,28 +36,23 @@
         }
         .form-input:focus {
             outline: none;
-            border-color: #4c51bf;
-            box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.5);
-        }
-        .form-button {
-            width: 110px;
-            padding: 0.5rem 0.75rem;
-            font-size: 1rem;
-            font-weight: 600;
-            color: #fff;
-            background-color: #4299e1;
-            border: 1px solid transparent;
-            border-radius: 0.25rem;
-            transition: background-color 0.15s ease-in-out;
-        }
-        .form-button:hover {
-            background-color: #3182ce;
+            border-color: #D97706;
+            box-shadow: 0 0 0 1px #D97706;
         }
     </style>
 </head>
 <body>
     <div id="addCourseModal" class="hidden z-50 fixed top-0 left-0 h-screen w-screen bg-gray-900 bg-opacity-50 flex items-center justify-center">
         <div class="popup-content">
+            <div class="flex justify-between items-center mb-4">
+                <h1 style="margin-left: 10rem"
+                class="text-xl font-bold text-center">Add Course</h1>
+                <button id="closeCoursePopup" type="button" class="p-1 rounded-full transition-all duration-200 ease-in-out hover:bg-gray-200 close cursor-pointer">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="text-black transform transition-transform duration-200 ease-in-out hover:rotate-45 hover:text-[#FFC245] h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
             <form class="space-y-6" action="{{ route('createCourse') }}" method="POST">
                 @csrf
                 <div class="rounded-md shadow-sm -space-y-px">
@@ -83,8 +78,7 @@
                         <input class="form-input mb-2 text-sm" id="level" name="level" type="text" required placeholder="Subject level">
                     </div>
                     <div>
-                        <label for="days" class="form-label">Days</label>
-                        <select id="days" name="days[]" multiple class="form-input">
+                        <select class="form-input mb-2 text-sm" id="days" name="days[]" multiple class="form-input">
                             @foreach(['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'] as $day)
                                 <option value="{{ $day }}">{{ $day }}</option>
                             @endforeach
@@ -92,7 +86,7 @@
                     </div>
                 </div>
                 <div>
-                    <button type="submit" class="form-button">Add</button>
+                    <button type="submit" class="form-button group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-xl text-white bg-yellow-600 hover:bg-yellow-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500">Add</button>
                 </div>
             </form>
         </div>
@@ -106,6 +100,9 @@
                 modal.classList.add('hidden');
             }
         }
+        document.getElementById('closeCoursePopup').addEventListener('click', function() {
+            toggleAddCourseModal();
+        });
     </script>
 </body>
 </html>

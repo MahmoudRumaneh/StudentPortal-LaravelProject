@@ -5,37 +5,36 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Course;
 use App\Models\UserCourse;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\View;
 
 class CourseController extends Controller
 {
-    public function showCourses()
+
+    public function editTable(Request $request, $studentId)
     {
         try {
             $courses = Course::all();
-            $addedCourseIds = [];
+            $addedCourseIds = UserCourse::where('user_id', $studentId)->pluck('course_id')->toArray();
 
-            if (Auth::check()) {
-                if (Auth::user()->type === 'admin') {
-                    $addedCourseIds = Course::pluck('id')->toArray();
-                } else {
-                    $addedCourseIds = Auth::user()->courses->pluck('id')->toArray();
-                }
-            }
+            $notAddedCourses = $courses->whereNotIn('id', $addedCourseIds);
+            $notAddedCourses = $notAddedCourses->toArray();
 
-            $notAddedCourses = Course::whereNotIn('id', $addedCourseIds)->get();
+            return response()->json([
+                'notAddedCourses' => $notAddedCourses,
+                'addedCourseIds' => $addedCourseIds
+            ]);
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Failed to fetch courses: ' . $e->getMessage());
+            return response()->json(['error' => 'Failed to fetch courses: ' . $e->getMessage()], 500);
         }
-
-        return view('studentHomePage', compact('notAddedCourses', 'addedCourseIds', 'courses'));
     }
+
+
+
 
     public function addCourse(Request $request)
     {
         try {
             $userId = auth()->user()->id;
-
             if (auth()->user()->type === 'admin') {
                 $userId = $request->student_id;
             }
@@ -51,9 +50,6 @@ class CourseController extends Controller
             return redirect()->back()->with('error', 'Failed to add course: ' . $e->getMessage());
         }
     }
-
-
-
 
     public function createCourse(Request $request)
     {
@@ -77,20 +73,6 @@ class CourseController extends Controller
 
         return redirect()->route('adminHomePage')->with('success', 'Course created successfully');
     }
-
-
-    public function showEditTable($studentId)
-    {
-        try {
-            $addedCourseIds = UserCourse::where('user_id', $studentId)->pluck('course_id')->toArray();
-            $notAddedCourses = Course::whereNotIn('id', $addedCourseIds)->get();
-        } catch (\Exception $e) {
-            dd($e->getMessage());
-        }
-
-        return view('components.editTable', compact('notAddedCourses', 'studentId'));
-    }
-
 
 
 

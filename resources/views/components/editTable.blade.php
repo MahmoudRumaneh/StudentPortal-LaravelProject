@@ -28,7 +28,7 @@
                     </button>
                 </div>
 
-                <div  id="myModalContent" class="overflow-y-auto px-8" style="max-height: 70vh;">
+                <div id="myModalContent" class="overflow-y-auto px-8" style="max-height: 70vh;">
                     <div style="background-color: #f8dc9a" 
                         class="flex flex-row pr-10 py-1 font-bold rounded-xl text-sm text-center items-center justify-between">
                         <div class="flex w-full justify-center">
@@ -59,7 +59,8 @@
 
                     </div>
                 
-                    @isset($notAddedCourses)
+                    <div id="courseContent">
+                        @isset ($notAddedCourses)
                         @foreach ($notAddedCourses as $course)
                             @php
                                 $formattedDays = str_replace(',', ',<br>', $course->days);
@@ -111,10 +112,20 @@
                                 </div>
                             </div>
                         @endforeach
-                    @endisset
+                        @endisset
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+    
+        function handleClose() {
+            var modal = document.getElementById("myModal");
+            modal.classList.add("hidden");
+        }
+    </script>
+    
 </body>
 </html>

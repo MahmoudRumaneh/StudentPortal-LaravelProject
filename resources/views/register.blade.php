@@ -1,4 +1,3 @@
-<!-- resources\views\auth\register.blade.php -->
 @if(session('status'))
     <div>{{ session('status') }}</div>
 @endif

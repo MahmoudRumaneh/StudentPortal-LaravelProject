@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\CourseController;
 use App\Http\Controllers\Admin;
+use App\Http\Controllers\Student;
 
 Route::get('/', function () {
     return view('welcome');
@@ -16,7 +17,7 @@ Route::get('login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('login', [LoginController::class, 'login']);
 Route::post('logout', [LoginController::class, 'logout'])->name('logout');
 
-Route::get('/studentHomePage', [CourseController::class, 'showCourses'])->name('studentHomePage');
+Route::get('/studentHomePage', [Student::class, 'studentHomePage'])->name('studentHomePage');
 Route::post('/add-course', [CourseController::class, 'addCourse'])->name('addCourse');
 
 Route::get('/adminHomePage', [Admin::class, 'adminHomePage'])->name('adminHomePage');
@@ -29,5 +30,5 @@ Route::put('/update-course/{id}', [Admin::class, 'updateCourse'])->name('updateC
 Route::delete('/delete-student/{id}', [Admin::class, 'deleteStudent'])->name('deleteStudent');
 Route::delete('/delete-all-students', [Admin::class, 'deleteAllStudents'])->name('deleteAllStudents');
 Route::post('/toggle-student-status/{id}', [Admin::class, 'toggleStudentStatus'])->name('toggleStudentStatus');
-Route::get('/editTable/{studentId}', [CourseController::class, 'showEditTable'])->name('editTable');
+Route::get('/editTable/{studentId}', [CourseController::class, 'editTable'])->name('editTable');
 Route::delete('/delete-course-association/{userId}/{courseId}', [CourseController::class, 'deleteCourseAssociation'])->name('deleteCourseAssociation');

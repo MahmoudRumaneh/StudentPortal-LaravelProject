@@ -12,13 +12,13 @@
 <body>
     @foreach ($students as $student)
     <div
-    id="editStudent{{ $student->id }}" class="hidden z-50 fixed top-0 left-0 h-screen w-screen bg-gray-900 bg-opacity-50 flex items-center justify-center">
+    id="editStudentForm{{ $student->id }}" class="hidden z-50 fixed top-0 left-0 h-screen w-screen bg-gray-900 bg-opacity-50 flex items-center justify-center">
         <div style="width: 50rem"
         class="bg-white p-8 rounded-3xl shadow-lg flex flex-col">
         <div style="display: flex; justify-content: flex-end;">
-            <button id="cancelEdit{{ $student->id }}"
+            <button id="cancelEditStudent"
                 type="button"
-                    class="p-1 rounded-full transition-all duration-200 ease-in-out hover:bg-gray-200 close cursor-pointer">
+                class="p-1 rounded-full transition-all duration-200 ease-in-out hover:bg-gray-200 cursor-pointer">
                 <svg xmlns="http://www.w3.org/2000/svg"
                     class="text-black transform transition-transform duration-200 ease-in-out hover:rotate-45
                     hover:text-[#FFC245] xl:h-6 xl:w-6 md:h-5 md:w-5 2xs:h-4 2xs:w-4"
@@ -29,8 +29,9 @@
                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
                 </svg>
             </button>
+            
         </div>
-            <form id="editForm{{ $student->id }}" action="{{ route('updateStudent', ['id' => $student->id]) }}" method="POST">
+            <form id="editStudentForm{{ $student->id }}" action="{{ route('updateStudent', ['id' => $student->id]) }}" method="POST">
                 @csrf
                 @method('PUT')
                 <div class="mb-4 flex w-full justify-start items-center">
@@ -62,7 +63,7 @@
                     class="bg-blue-500 hover:bg-blue-700 text-white font-bold
                     py-1 rounded focus:outline-none focus:shadow-outline">Save</button>
 
-                    <button style="width: 110px" id="cancelEdit{{ $student->id }}" 
+                    <button id="cancelEditStudent" style="width: 110px" id="cancelEdit{{ $student->id }}" 
                     type="button" class="bg-red-500 hover:bg-red-700 text-white 
                     font-bold py-1 rounded focus:outline-none focus:shadow-outline">Cancel</button>
                 </div>
@@ -71,32 +72,28 @@
     </div>
     @endforeach
 
+
     <script>
-        function showEditForm(studentId) {
-            var editForm = document.getElementById('editStudentForm' + studentId);
-            editForm.classList.remove('hidden');
+        function showEditStudentForm(studentId) {
+            var editStudentForm = document.getElementById('editStudentForm' + studentId);
+            editStudentForm.classList.remove('hidden');
         }
 
-        var editButtons = document.querySelectorAll('[id^="editStudent"]');
-        editButtons.forEach(function(button) {
+        var cancelStudentProfileButtons = document.querySelectorAll('#cancelEditStudent');
+        cancelStudentProfileButtons.forEach(function(button) {
             button.addEventListener('click', function() {
-                var studentId = button.id.replace('editStudent', '');
-                showEditForm(studentId);
+                hideEditStudentForm();
             });
         });
 
-        function hideEditForm(studentId) {
-            var editForm = document.getElementById('editStudentForm' + studentId);
-            editForm.classList.add('hidden');
-        }
-
-        var cancelButtons = document.querySelectorAll('[id^="cancelEdit"]');
-        cancelButtons.forEach(function(button) {
-            button.addEventListener('click', function() {
-                var studentId = button.id.replace('cancelEdit', '');
-                hideEditForm(studentId);
-            });
+    function hideEditStudentForm() {
+        var editStudentForms = document.querySelectorAll('[id^="editStudentForm"]');
+        editStudentForms.forEach(function(form) {
+            form.classList.add('hidden');
         });
+    }
+
+
     </script>
 </body>
 </html>

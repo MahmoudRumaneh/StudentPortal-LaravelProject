@@ -45,12 +45,11 @@ class RegisterController extends Controller
             'password' => bcrypt($request->password),
             'type' => 'student',
             'active' => false,
-            'phone' => $request->phone,
-            'address' => $request->address,
-            'national_number' => $request->national_number,
+            'phone' => $request->phone ?? "000000000",
+            'address' => $request->address ?? "No Address Available",
+            'national_number' => $request->national_number ?? "0000000000",
         ];
 
-        // Check if an image is provided and not empty
         if ($request->has('image') && $request->filled('image')) {
             $userData['image'] = $request->image;
         } else {

@@ -63,15 +63,6 @@
                                 {{ auth()->user()->address}}   
                             </div>
                         </div>
-                
-                        <div class="flex flex-row items-center py-2">
-                            <label class="text-gray-700 text-md font-bold w-auto pr-2">
-                                National Number:
-                            </label>
-                            <div class="text-left">
-                                {{ auth()->user()->national_number}}   
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -102,9 +93,7 @@
                                 <form id="removeAllStudentsForm" action="{{ route('deleteAllStudents') }}" method="POST">
                                     @csrf
                                     @method('DELETE')
-                                    
                                         <button style="border-radius: 10px; width: 160px; padding: 0px;" onclick="confirmDeleteAllStudents()">Remove All Students</button>
-                                    
                                 </form>  
                             </div>                 
                         </div>
@@ -114,14 +103,14 @@
                         <div class="overflow-y-auto px-8">
                             @foreach ($students as $student)
                                 <div class="flex flex-col mb-10 rounded-xl px-4 pb-6 border shadow-lg">
-                                    <div class="flex flex-row justify-between px-4 text-sm text-center items-center my-2">
+                                    <div class="flex flex-row justify-between px-4 text-sm text-center items-center mb-2 mt-8">
                                         <div class="flex">
                                             <div class="flex relative border-4 ml-5 border-white rounded-full overflow-hidden">
                                                 <img class="object-cover object-center rounded-full"
                                                 style="width: 100px; height:120px"
                                                 src={{ $student->image }} alt="studentImage" />
                                             </div>
-                                            <div class="flex flex-col ml-8">
+                                            <div class="flex flex-col ml-8 items-center justify-center">
                                                 <div class="flex w-full text-left text-lg font-bold">
                                                     <p>{{ $student->name }}</p>
                                                 </div>
@@ -141,14 +130,16 @@
                                         </div>
                                         
                                         
-                                        <div class="flex flex-col items-center justify-center" style="width: 20%">
+                                        <div class="flex flex-col items-center justify-center mt-2" style="width: 20%">
+
                                             <div class="flex flex-row items-center justify-center">
-                                                <button id="editStudent{{ $student->id }}" class="hover:bg-gray-200 
-                                                    bg-yellow-400 hover:bg-gray-400 rounded-xl text-md mb-5"
-                                                    style="width: 110px; padding: 2px 0px; border-radius:
-                                                    10px;">Edit Profile</button>
+                                                <button onclick="showEditStudentForm({{ $student->id }})" class="hover:bg-gray-200 bg-yellow-400 hover:bg-gray-400 rounded-xl text-md mb-5" style="width: 110px; padding: 2px 0px; border-radius: 10px;">
+                                                    Edit Profile
+                                                </button>
                                             </div>
                                             @include('components.editStudentProfile', ['student' => $student])
+                                            
+                                            
                                             <form action="{{ route('deleteStudent', ['id' => $student->id]) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this student?')">
                                                 @csrf
                                                 @method('DELETE')
@@ -174,15 +165,13 @@
                                         </div>
                                     </div>
                                     <div class="flex mb-3 text-sm">
-                                        <div class="mt-10 text-center">
-                                            <button id="openModal" onclick="openModal()"
-                                            onclick="openModal({{ $student->id }})" class="text-blue-500 hover:text-blue-700 font-bold cursor-pointer">
-                                                Edit Table
-                                            </button>                                         
-                                            @include('components.editTable', ['studentId' => $student->id])
+                                        <div class="mt-4 text-center">
+                                                <button onclick="openEditTableModal('{{ $student->id }}')" class="edit-button hover:bg-gray-200 bg-yellow-400 hover:bg-gray-400 rounded-xl text-md mb-1" style="width: 110px; padding: 2px 0px; border-radius: 10px;">
+                                                    Edit Table
+                                                </button>                                         
+                                                @include('components.editTable', ['studentId' => $student->id])
 
                                         </div>
-                                        
                                     </div>
                                     
                                     
@@ -310,7 +299,7 @@
                                         <p>Days</p>
                                     </div>
                                 </div>
-                                    @foreach ($courses as $course)
+                                    @foreach ($courses->sortByDesc('created_at') as $course)
                                         @php
                                             $formattedDays = str_replace(',', ',<br>', $course->days);
                                         @endphp
@@ -368,6 +357,8 @@
 
 
         <script>
+
+            
         document.getElementById('toggleStudents').addEventListener('click', function() {
             showStudentsSection();
         });
@@ -410,79 +401,111 @@
         }
 
 
-
-        function openModal(studentId) {
+        function openEditTableModal(studentId) {
     var modal = document.getElementById("myModal");
     modal.classList.remove("hidden");
-    showCourses(studentId);
+    showEditTable(studentId);
 }
 
-        function handleClose() {
-            var modal = document.getElementById("myModal");
-            modal.classList.add("hidden");
-        }
+function showEditTable(studentId) {
+    var modal = document.getElementById("myModal");
+    var courseContent = document.getElementById('courseContent');
+    var url = `{{ route('editTable', ['studentId' => ':studentId']) }}`.replace(':studentId', studentId);
 
-        function showEditTable(studentId) {
-    var editTableContainer = document.getElementById("editTableContainer_" + studentId);
-    editTableContainer.innerHTML = `<div id="editTable_${studentId}"></div>`;
-    // Pass the studentId parameter in the route
-    var url = "{{ route('editTable', ['studentId' => ':studentId']) }}".replace(':studentId', studentId);
     fetch(url)
-        .then(response => response.text())
-        .then(html => {
-            document.getElementById(`editTable_${studentId}`).innerHTML = html;
-            var modal = document.getElementById("myModal");
-            modal.classList.remove("hidden");
-            var span = document.getElementsByClassName("close")[0];
-            span.onclick = function () {
-                modal.classList.add("hidden");
-            };
-            window.onclick = function (event) {
-                if (event.target == modal) {
-                    modal.classList.add("hidden");
-                }
-            };
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
         })
-        .catch(error => console.error('Error fetching edit table:', error));
+        .then(data => {
+            courseContent.innerHTML = '';
+            Object.values(data.notAddedCourses).forEach(course => {
+                var formattedDays = course.days ? course.days.split(',').map(day => `${day.trim()},<br>`).join('') : '';
+                var courseHTML = `
+                    <div class="flex flex-row px-4 text-sm text-center items-center rounded-xl justify-between border py-2 my-2">
+                        <div class="flex w-full justify-center">
+                            <p>${course.name}</p>
+                        </div>
+                        <div class="flex justify-center" style="width: 50%">
+                            <p>${course.theoretical_section}</p>
+                        </div>
+                        <div class="flex justify-center" style="width: 50%">
+                            <p>${course.practical_section}</p>
+                        </div>
+                        <div class="flex w-full justify-center">
+                            <p>${course.lecture_time_and_room_number}</p>
+                        </div>
+                        <div class="flex w-full justify-center">
+                            <p>${course.teacher}</p>
+                        </div>
+                        <div class="flex justify-center" style="width: 50%">
+                            <p>${course.hours}</p>
+                        </div>
+                        <div class="flex w-full justify-center">
+                            <p>${course.level}</p>
+                        </div>
+                        <div class="flex items-center justify-center" style="width: 50%; word-wrap: break-word;">
+                            ${formattedDays}
+                        </div>
+
+                        <div>
+                            <form action="{{ route('addCourse') }}" method="POST">
+                                @csrf
+                                <input type="hidden" name="course_id" value="${course.id}">
+                                <input type="hidden" name="student_id" value="${studentId}">
+                                <button type="submit" class="hover:bg-green-900 bg-green-500 bg-transparent border-none" style="width: 24px; min-width: 24px; height: 24px; border-radius: 50%; color: white;">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>`;
+                courseContent.insertAdjacentHTML('beforeend', courseHTML);
+            });
+
+            modal.classList.remove("hidden");
+        })
+        .catch(error => console.error('Error fetching course data:', error));
 }
 
-        function addCourse(courseId, studentId) {
+
+
+
+
+        function addCourse(courseId) {
             var url = "{{ route('addCourse') }}";
             var formData = new FormData();
             formData.append('course_id', courseId);
-            formData.append('student_id', studentId);
             formData.append('_token', "{{ csrf_token() }}");
+
             fetch(url, {
                 method: 'POST',
                 body: formData
             })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        console.log('Course added successfully');
-                        showEditTable(studentId);
-                    } else {
-                        console.error('Failed to add course:', data.error);
-                    }
-                })
-                .catch(error => console.error('Error adding course:', error));
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    console.log('Course added successfully');
+                } else {
+                    console.error('Failed to add course:', data.error);
+                }
+            })
+            .catch(error => console.error('Error adding course:', error));
         }
 
 
 
 
-            
-
-            function deleteCourseAssociation(courseId) {
-                if (confirm('Are you sure you want to delete this course association?')) {
-                    document.getElementById('deleteCourseAssociationForm_' + courseId).submit();
-                }
+        function deleteCourseAssociation(courseId) {
+            if (confirm('Are you sure you want to delete this course association?')) {
+                document.getElementById('deleteCourseAssociationForm_' + courseId).submit();
             }
+        }
             
-            function confirmDeleteCourse(courseName) {
-                return confirm(`Are you sure you want to delete the course "${courseName}"?`);
-            }
-
+        function confirmDeleteCourse(courseName) {
+            return confirm(`Are you sure you want to delete the course "${courseName}"?`);
+        }
 
         </script>
 
