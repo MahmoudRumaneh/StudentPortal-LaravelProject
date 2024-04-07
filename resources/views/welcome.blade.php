@@ -9,8 +9,8 @@
     <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
     
     <style>
-        body {
-            background-image: url('/images/bgLogin.jpg'); /* Replace 'path/to/your/image.jpg' with the actual path to your image */
+        .body-cont {
+            background-image: url('/images/bgLogin.jpg');
             background-size: cover;
             background-position: center;
             
@@ -18,8 +18,8 @@
     </style>
 </head>
 <body class="font-sans antialiased dark:bg-black dark:text-white/50">
-
-    <div class="flex flex-col justify-center items-center h-screen">
+    @guest
+    <div class="body-cont flex flex-col justify-center items-center h-screen">
         <div class="flex flex-col bg-white shadow-md rounded-3xl px-8 pt-6 pb-8 mb-4" style="width: 30rem;"> 
             <div class="flex justify-center">
                 <img style="width: 100px;"
@@ -53,5 +53,25 @@
             </div>
         </div>
     </div>
+    @endguest
+    @auth
+        <div class="flex justify-center items-center h-screen" id="lottie-container"
+            style="position: absolute; top: 0; bottom: 0; left: 0; right: 0; margin: auto; width: 100%; height: 100%;">
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.7.10/lottie.min.js"></script>
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    var animation = bodymovin.loadAnimation({
+                        container: document.getElementById('lottie-container'),
+                        renderer: 'svg',
+                        loop: true,
+                        autoplay: true,
+                        path: '/lottie/404Page.json'
+                    });
+                });
+            </script>
+        </div>
+    @endauth
+
+    
 </body>
 </html>

@@ -12,8 +12,9 @@
 </head>
 
 <body>
+@if (auth()->user()->type === 'student')
 @include('components.navbar')
-@if (auth()->user()->active == 0)
+    @if (auth()->user()->active == 0)
     <div style="margin-top: 4rem" class="bg-red-400 pb-3 pt-10">
         <p class="px-4">This account is inactive. Please wait for the administrator to activate your account.</p>
     </div>
@@ -211,7 +212,39 @@
         
     </div>
     @endif
+    
+    @auth
+    <script>
+        window.onload = function () {
+            history.pushState(null, "", location.href);
+            window.onpopstate = function () {
+                history.go(1);
+                window.location.href = "/404";
+            };
+        };
+    </script>
+    @endauth
+@endif
 
+@if (auth()->user()->type === 'admin')
+<div class="flex justify-center items-center h-screen" id="lottie-container"
+style="position: absolute; top: 0; bottom: 0; left: 0; right: 0; margin: auto; width: 100%; height: 100%;">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.7.10/lottie.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var animation = bodymovin.loadAnimation({
+            container: document.getElementById('lottie-container'),
+            renderer: 'svg',
+            loop: true,
+            autoplay: true,
+            path: '/lottie/404Page.json'
+        });
+    });
+</script>
+</div>
+@endif
+
+    
 
 </body>
 </html>

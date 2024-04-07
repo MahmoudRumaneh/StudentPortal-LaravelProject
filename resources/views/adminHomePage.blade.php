@@ -13,9 +13,8 @@
 </head>
 
 <body>
+    @if (auth()->user()->type === 'admin')
     @include('components.navbar')
-        
-
         <div class="flex justify-center" style="padding-bottom: 5rem; background-image: url('/images/adminHomeImage.png')">
             
             <div style="margin-top: 6rem; width: 50%" class="flex flex-col items-start justify-center">
@@ -509,8 +508,39 @@ function showEditTable(studentId) {
 
         </script>
 
+        @auth
+        <script>
+            window.onload = function () {
+                history.pushState(null, "", location.href);
+                window.onpopstate = function () {
+                    history.go(1);
+                    window.location.href = "/404";
+                };
+            };
+        </script>
+        @endauth
+
+@endif
+
+@elseif (auth()->user()->type === 'student')
+        <div class="flex justify-center items-center h-screen" id="lottie-container"
+        style="position: absolute; top: 0; bottom: 0; left: 0; right: 0; margin: auto; width: 100%; height: 100%;">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.7.10/lottie.min.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                var animation = bodymovin.loadAnimation({
+                    container: document.getElementById('lottie-container'),
+                    renderer: 'svg',
+                    loop: true,
+                    autoplay: true,
+                    path: '/lottie/404Page.json'
+                });
+            });
+        </script>
+        </div>
+@endif  
 
 </body>
 </html>
 
-@endif
+

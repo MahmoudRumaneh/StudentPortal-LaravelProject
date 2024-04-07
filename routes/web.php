@@ -32,3 +32,8 @@ Route::delete('/delete-all-students', [Admin::class, 'deleteAllStudents'])->name
 Route::post('/toggle-student-status/{id}', [Admin::class, 'toggleStudentStatus'])->name('toggleStudentStatus');
 Route::get('/editTable/{studentId}', [CourseController::class, 'editTable'])->name('editTable');
 Route::delete('/delete-course-association/{userId}/{courseId}', [CourseController::class, 'deleteCourseAssociation'])->name('deleteCourseAssociation');
+
+
+Route::middleware('guest')->name('login')->get('/login', function () {
+    return view('welcome');
+});
